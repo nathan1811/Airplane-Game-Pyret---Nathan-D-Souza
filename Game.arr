@@ -97,7 +97,7 @@ fun place-airplane-xy(w :: World):
     I.text("Score: " + num-to-string(w.r), 20, "black"), 
     50, 20,
     I.place-image(
-      I.text("Fule: " + num-to-string(w.f), 20, "black"), 
+      I.text("Fuel: " + num-to-string(w.f), 20, "black"), 
       50, 45,
     I.place-image(AIRPLANE, w.p.x, w.p.y, 
       I.place-image(SMALLER-BIRD, w.b.x, w.b.y, 
