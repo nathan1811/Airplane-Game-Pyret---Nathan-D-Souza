@@ -41,7 +41,7 @@ HEIGHT = 500
 BASE-HEIGHT = 50
 WATER-WIDTH = 500
 
-# Airplane and balloon movement settings
+# Airplane and bird movement settings
 AIRPLANE-X-MOVE = 10
 AIRPLANE-Y-MOVE = 3
 BIRD-X-MOVE = -6  # Bird moves leftwards
@@ -61,9 +61,7 @@ BACKGROUND =
       210, 340, I.place-image(PYRET-SHIP,
         200, 370, BLANK-SCENE)))
 
-fun collision(p1, p2, threshold):
-  num-sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y))) < threshold
-end
+
 # Move airplane horizontally with wrapping behavior
 fun move-airplane-wrapping-x-on-tick(x):
   num-modulo(x + AIRPLANE-X-MOVE, WIDTH)
@@ -87,11 +85,11 @@ fun move-fuel-x-on-tick(s):
   if s.x < 0:
     posn(WIDTH, num-random(HEIGHT))  # Resetting the fuel take to a random position when it moves out of screen
   else:
-    posn(s.x - 5, s.y)  # Moving the fuel tank to the left
+    posn(s.x - 7, s.y)  # Moving the fuel tank to the left
   end
 end
 
-# Place both airplane and bird on the scene
+# Place both airplane and bird on the scene with score and furl details
 fun place-airplane-xy(w :: World):
   I.place-image(
     I.text("Score: " + num-to-string(w.r), 20, "black"), 
@@ -107,7 +105,7 @@ fun place-airplane-xy(w :: World):
                 I.place-image(FUEL, w.s.x, w.s.y, BACKGROUND))))))))
 end
 
-
+# To collect fuel for the plane
 fun collect-fuel(w :: World):
   ask:
     | distance(w.p, w.s) < 100 then:
@@ -116,6 +114,7 @@ fun collect-fuel(w :: World):
   end
 end
 
+# Collect the fuel and update with world state
 fun move-airplane-xy-on-tick(w :: World):
   collect-fuel(world(
     posn(move-airplane-wrapping-x-on-tick(w.p.x), move-airplane-y-on-tick(w.p.y)),
@@ -124,8 +123,7 @@ fun move-airplane-xy-on-tick(w :: World):
     move-bird-y-on-tick(w.b2),
     move-bird-y-on-tick(w.b3),
     move-bird-y-on-tick(w.b4),
-      w.f, w.r, move-fuel-x-on-tick(w.s))
-      )
+      w.f, w.r, move-fuel-x-on-tick(w.s)))
 end
 
 
