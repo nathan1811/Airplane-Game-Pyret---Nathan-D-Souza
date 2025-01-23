@@ -1,4 +1,4 @@
-# Airplane-Game-Pyret---Nathan-D-Souza
+# Airplane-Game-Pyret---Nathan-D'Souza
 
 This is a Game Project for the COMP205 Course at Krea University.
 
