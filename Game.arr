@@ -89,23 +89,46 @@ fun move-fuel-x-on-tick(s):
   end
 end
 
-# Place both airplane and bird on the scene with score and furl details
+# Place both airplane and birds on the scene
 fun place-airplane-xy(w :: World):
-  I.place-image(
-    I.text("Score: " + num-to-string(w.r), 20, "black"), 
-    50, 20,
+  if game-ends(w):
     I.place-image(
-      I.text("Fuel: " + num-to-string(w.f), 20, "black"), 
-      50, 45,
-    I.place-image(AIRPLANE, w.p.x, w.p.y, 
-      I.place-image(SMALLER-BIRD, w.b.x, w.b.y, 
-        I.place-image(SMALL-BIRD, w.b1.x, w.b1.y, 
-          I.place-image(SMALLER-BIRD, w.b2.x, w.b2.y, 
-            I.place-image(SMALLEST-BIRD, w.b3.x, w.b3.y,
-                I.place-image(FUEL, w.s.x, w.s.y, BACKGROUND))))))))
+      I.text("GAME OVER", 40, "red"),
+      WIDTH / 2, HEIGHT / 2,
+      I.place-image(
+        I.text("Final Score: " + num-to-string(w.r), 30, "black"),
+        WIDTH / 2, (HEIGHT / 2) + 50,
+        I.place-image(
+          I.text("Thanks for playing!", 20, "black"),
+          WIDTH / 2, (HEIGHT / 2) + 100,
+          BACKGROUND
+        )
+      )
+    )
+  else:
+    I.place-image(
+      I.text("Score: " + num-to-string(w.r), 20, "black"),
+      50, 20,
+      I.place-image(
+        I.text("Fuel: " + num-to-string(w.f), 20, "black"),
+        50, 45,
+        I.place-image(AIRPLANE, w.p.x, w.p.y,
+          I.place-image(SMALLER-BIRD, w.b.x, w.b.y,
+            I.place-image(SMALL-BIRD, w.b1.x, w.b1.y,
+              I.place-image(SMALLER-BIRD, w.b2.x, w.b2.y,
+                I.place-image(SMALLEST-BIRD, w.b3.x, w.b3.y,
+                  I.place-image(FUEL, w.s.x, w.s.y, BACKGROUND)
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  end
 end
 
-# To collect fuel for the plane
+
 fun collect-fuel(w :: World):
   ask:
     | distance(w.p, w.s) < 100 then:
@@ -114,7 +137,6 @@ fun collect-fuel(w :: World):
   end
 end
 
-# Collect the fuel and update with world state
 fun move-airplane-xy-on-tick(w :: World):
   collect-fuel(world(
     posn(move-airplane-wrapping-x-on-tick(w.p.x), move-airplane-y-on-tick(w.p.y)),
@@ -123,7 +145,8 @@ fun move-airplane-xy-on-tick(w :: World):
     move-bird-y-on-tick(w.b2),
     move-bird-y-on-tick(w.b3),
     move-bird-y-on-tick(w.b4),
-      w.f, w.r, move-fuel-x-on-tick(w.s)))
+      w.f, w.r, move-fuel-x-on-tick(w.s))
+      )
 end
 
 
@@ -164,6 +187,25 @@ end
 INIT-POS = world(posn(0, 0), posn(340, 200),posn(559, 392), posn(710, 847), posn(600, 276), posn(200, 370), 100, 100, posn(WIDTH, num-random(HEIGHT)))
 
 # Run the animation
+# Add an end scene when the game ends
+fun end-screen(w :: World):
+  I.place-image(
+    I.text("GAME OVER", 40, "red"),
+    WIDTH / 2, HEIGHT / 2,
+    I.place-image(
+      I.text("Final Score: " + num-to-string(w.r), 30, "black"),
+      WIDTH / 2, (HEIGHT / 2) + 50,
+      I.place-image(
+        I.text("Thanks for playing!", 20, "black"),
+        WIDTH / 2, (HEIGHT / 2) + 100,
+        BACKGROUND
+      )
+    )
+  )
+end
+
+# Run the animation with end-screen functionality
+# Updated reactor without `complete`
 anim = reactor:
   init: INIT-POS,
   on-tick: move-airplane-xy-on-tick,
@@ -173,6 +215,3 @@ anim = reactor:
 end
 
 R.interact(anim)
-
-
-
